@@ -1,29 +1,26 @@
-# Consumet API — Railway sem Docker
+# Consumet API - Railway Ready
 
-Este pacote foi ajustado para rodar na Railway usando **Nixpacks**, sem Dockerfile.
+Projeto corrigido para rodar na Railway **sem Docker**, usando Nixpacks.
 
-Ele está focado na parte necessária para o Netfox carregar episódios/fontes de anime:
+## Importante
 
-- `/health`
-- `/meta/anilist/info/:id?provider=gogoanime&dub=false`
-- `/meta/anilist/watch/:episodeId`
+Este pacote não usa Dockerfile. Se a Railway detectar Docker, você está subindo o repositório errado ou ainda existe um `Dockerfile` na raiz.
 
-Observação: no `@consumet/extensions` atual, o provider interno padrão do `META.Anilist` é Hianime. A query `provider=gogoanime` pode continuar vindo do seu Netfox sem quebrar, mas ela não é necessária nesta instância.
+Na Railway, o log deve mostrar `NIXPACKS`, não build de Docker.
 
-## Como subir na Railway
+## Deploy
 
-1. Crie um repositório no GitHub com estes arquivos.
-2. Crie um projeto novo na Railway.
-3. Escolha **Deploy from GitHub repo**.
-4. A Railway deve detectar o `railway.json` e usar **Nixpacks**.
-5. Não use Dockerfile.
+1. Suba todos os arquivos deste projeto para um repositório GitHub novo.
+2. Importe o repositório na Railway.
+3. Confirme que o root directory é a raiz onde estão `package.json`, `railway.json` e `nixpacks.toml`.
+4. Deploy.
 
-## Comandos
+## Comandos usados pela Railway
 
-Build/install:
+Install:
 
 ```bash
-npm ci
+npm install
 ```
 
 Start:
@@ -32,31 +29,27 @@ Start:
 npm start
 ```
 
-Healthcheck:
+## Teste
 
-```txt
-/health
-```
-
-## Variáveis de ambiente
-
-A Railway cria `PORT` automaticamente. Opcionalmente, defina:
-
-```env
-NODE_ENV=production
-HOST=0.0.0.0
-```
-
-## Testes rápidos
-
-Depois do deploy, teste:
+Depois do deploy, abra:
 
 ```txt
 https://SEU-PROJETO.up.railway.app/health
-https://SEU-PROJETO.up.railway.app/meta/anilist/info/21?provider=gogoanime&dub=false
 ```
 
-Se `/health` responder `{ "ok": true }`, a API está online.
+Resposta esperada:
+
+```json
+{
+  "ok": true
+}
+```
+
+Teste AniList/GogoAnime:
+
+```txt
+https://SEU-PROJETO.up.railway.app/meta/anilist/info/21?provider=gogoanime&dub=false
+```
 
 ## Usar no Netfox
 
@@ -66,4 +59,12 @@ No Netlify/Netfox, configure:
 CONSUMET_API_URL=https://SEU-PROJETO.up.railway.app
 ```
 
-Depois faça novo deploy no Netfox.
+Depois faça redeploy.
+
+## Correção aplicada
+
+- Removido Docker para evitar erro com imagens antigas/base Debian.
+- `nixpacks.toml` usa `npm install`, não `npm ci`, então não quebra se o Railway não enxergar o lockfile.
+- Incluído `git` e `openssh` no ambiente Nixpacks para dependências que usam GitHub.
+- `railway.json` força builder Nixpacks.
+- `/health` disponível para healthcheck.

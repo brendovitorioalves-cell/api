@@ -1,0 +1,29 @@
+{
+  "name": "consumet-api-railway",
+  "version": "1.0.1",
+  "main": "src/main.ts",
+  "scripts": {
+    "start": "node -r ts-node/register/transpile-only src/main.ts",
+    "dev": "nodemon --watch src --ext ts --exec \"node -r ts-node/register/transpile-only src/main.ts\""
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "prince-ao <princead@tutanota.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@consumet/extensions": "latest",
+    "@fastify/cors": "^8.5.0",
+    "@types/node": "^20.14.10",
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "description": "Consumet API ready for Railway Nixpacks deploy without Docker"
+}
